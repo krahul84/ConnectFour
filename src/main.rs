@@ -268,27 +268,27 @@ fn main() {
     grid.grid_print();
 
     loop {
-        println!("Player {}'s turn. Which column? ", player);
-        let mut input = String::new();
-        match stdin().read_line(&mut input) {
+        println!("It's turn of Player {}'s. Please pick a column to drop", player);
+        let mut colcell = String::new();
+        match stdin().read_line(&mut colcell) {
             Ok(_) => {
-                let column = match usize::from_str(&input[..].trim()) {
-                    Ok(column) => {
-                        if column != 0 {
-                            column - 1
+                let col = match usize::from_str(&colcell[..].trim()) {
+                    Ok(col) => {
+                        if col != 0 {
+                            col - 1
                         } else {
-                            println!("That isn't a valid column!");
+                            println!("Please provide valid column");
                             continue;
                         }
                     },
                     Err(_) => {
-                        println!("That isn't a valid column!");
+                        println!("Please provide valid column");
                         continue;
                     }
                 };
 
-                if grid.grid_Matrix(player, column).is_err() {
-                    println!("That isn't a valid column!");
+                if grid.grid_Matrix(player, col).is_err() {
+                    println!("Please provide a valid column");
                     continue;
                 }
 
@@ -296,7 +296,7 @@ fn main() {
 
                 match grid.winner() {
                     Some(winner) => {
-                        println!("Player {} wins!", winner);
+                        println!("The winner is Player {}", winner);
                         break;
                     },
                     None => {},
@@ -308,13 +308,12 @@ fn main() {
                 };
             },
             Err(_) => {
-                println!("Input required.");
+                println!("Please provide data.");
                 continue;
             }
         }
     }
 }
-
 
 
 
