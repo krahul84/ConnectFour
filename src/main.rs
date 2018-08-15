@@ -7,23 +7,23 @@ use std::str::FromStr;
 pub struct GridMatrix{
      row_size:usize,
      col_size:usize,
-     Values: Vec<Box>,
+     values: Vec<Box>,
 
 }
 
 impl GridMatrix{
-    pub fn createGrid(row_size:usize,col_size:usize) -> GridMatrix{
+    pub fn create_grid(row_size:usize,col_size:usize) -> GridMatrix{
        GridMatrix{
          row_size: row_size,
          col_size: col_size,
-         Values: (0..row_size).map(|_| Box::create(col_size)).collect(),
+         values: (0..row_size).map(|_| Box::create(col_size)).collect(),
       }
     }
    
-   pub fn grid_Matrix(&mut self, player: Grid, column: usize) -> Result<(), ()> {
+   pub fn grid_matrix(&mut self, player: Grid, column: usize) -> Result<(), ()> {
         let exception = Err(());
 
-        for value in self.Values.iter_mut().rev() {
+        for value in self.values.iter_mut().rev() {
             if value.position_grid(player, column).is_ok() {
                 return Ok(());
             }
@@ -40,7 +40,7 @@ impl GridMatrix{
         let mut num = 1;
         let mut grid_last = Grid::Empty;
 
-        for value in self.Values.iter() {
+        for value in self.values.iter() {
             for value in value.grid.iter() {
                 if value.check_player() && *value == grid_last {
                     num += 1;
@@ -62,8 +62,8 @@ impl GridMatrix{
         let mut num = 1;
         let mut grid_last = Grid::Empty;
 
-        for column in (0..self.col_size) {
-            for value in self.Values.iter() {
+        for column in 0..self.col_size {
+            for value in self.values.iter() {
                 let gridval = value.grid[column];
 
                 if gridval.check_player() && gridval == grid_last {
@@ -86,14 +86,14 @@ impl GridMatrix{
         for (cols, _) in (0..(self.col_size - 3)).enumerate() {
             for (rows, _) in (0..(self.row_size - 3)).enumerate() {
                 let mut num = 1;
-                let mut grid_last = self.Values[rows].grid[cols];
+                let mut grid_last = self.values[rows].grid[cols];
 
                 if !grid_last.check_player() {
                     continue;
                 }
 
-                for offset in (1..4) {
-                    let gridval = self.Values[rows + offset].grid[cols + offset];
+                for offset in 1..4 {
+                    let gridval = self.values[rows + offset].grid[cols + offset];
 
                     if gridval.check_player() && gridval == grid_last {
                         num += 1;
@@ -117,14 +117,14 @@ impl GridMatrix{
             for (rows, _) in ((self.row_size - 3)..self.row_size).enumerate() {
                 let row_num = self.row_size - 3 + rows;
                 let mut num = 1;
-                let mut grid_last = self.Values[row_num].grid[cols];
+                let mut grid_last = self.values[row_num].grid[cols];
 
                 if !grid_last.check_player() {
                     continue;
                 }
 
-                for offset in (1..4) {
-                    let gridval = self.Values[row_num - offset].grid[cols + offset];
+                for offset in 1..4 {
+                    let gridval = self.values[row_num - offset].grid[cols + offset];
 
                     if gridval.check_player() && gridval == grid_last {
                         num += 1;
@@ -163,7 +163,7 @@ impl GridMatrix{
 
 impl fmt::Display for GridMatrix {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        for n in 0..self.Values[0].size() {
+        for n in 0..self.values[0].size() {
             try!(write!(f, "{}  ", n + 1));
         }
 
@@ -171,7 +171,7 @@ impl fmt::Display for GridMatrix {
 
         let mut result = Ok(());
 
-        for row in self.Values.iter() {
+        for row in self.values.iter() {
             result = writeln!(f, "{}", row);
         }
 
@@ -262,7 +262,7 @@ impl fmt::Display for Box {
 
 
 fn main() {
-    let mut grid = GridMatrix::createGrid(6, 7);
+    let mut grid = GridMatrix::create_grid(6, 7);
     let mut player = Grid::A;
 
     grid.grid_print();
@@ -287,7 +287,7 @@ fn main() {
                     }
                 };
 
-                if grid.grid_Matrix(player, col).is_err() {
+                if grid.grid_matrix(player, col).is_err() {
                     println!("Please provide a valid column");
                     continue;
                 }
@@ -314,6 +314,7 @@ fn main() {
         }
     }
 }
+
 
 
 
